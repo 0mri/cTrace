@@ -6,8 +6,7 @@ all: main
 main: bin/main.o
 	@echo 'Building target: main'
 	@echo 'Invoking: C++ Linker'
-	g++ -o bin/hello bin/main.o
-	@echo 'Finished building target: hello'
+	g++ -o bin/run bin/main.o
 	@echo ' '
 
 # Depends on the source and header files
