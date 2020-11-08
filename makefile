@@ -6,11 +6,12 @@ all: main
 main: bin/main.o
 	@echo 'Building target: main'
 	@echo 'Invoking: C++ Linker'
-	g++ -o bin/run bin/*.o
+	g++ -o bin/cTrace bin/*.o
 	@echo ' '
 
 
 
+# SOURCES := src/main.cpp src/Session.cpp src/Graph.cpp src/Tree.cpp src/Agent.cpp src/Virus.cpp src/ContactTracer.cpp
 
 # Depends on the source and header files
 bin/main.o: bin/Session.o
@@ -38,3 +39,6 @@ bin/ContactTracer.o:
 #Clean the build directory
 clean: 
 	rm -f bin/*
+
+run:
+	bin/cTrace "config1.json"

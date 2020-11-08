@@ -10,7 +10,7 @@ int main(int argc, char **argv)
         return 0;
     }
     Session sess(argv[1]);
-    sess.simulate();
+    // sess.simulate();
 
 
     return 0;
