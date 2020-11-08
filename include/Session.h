@@ -2,7 +2,6 @@
 #define SESSION_H_
 
 #include <vector>
-#include <string>
 #include "Graph.h"
 
 class Agent;
@@ -26,7 +25,7 @@ public:
     TreeType getTreeType() const;
     
 private:
-    Graph g;
+    // Graph g;
     TreeType treeType;
     std::vector<Agent*> agents;
 };

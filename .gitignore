@@ -1,6 +1,7 @@
 # Prerequisites
 *.d
 /.vscode
+*.json
 # Compiled Object files
 *.slo
 *.lo
