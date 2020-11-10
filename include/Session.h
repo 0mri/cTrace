@@ -2,9 +2,9 @@
 #define SESSION_H_
 
 #include <vector>
-#include <string>
 #include "Graph.h"
-
+#include <string>
+#include <queue>  
 class Agent;
 
 enum TreeType{
@@ -26,6 +26,7 @@ public:
     TreeType getTreeType() const;
     
 private:
+    queue <Agent> agent_queue;
     Graph g;
     TreeType treeType;
     std::vector<Agent*> agents;

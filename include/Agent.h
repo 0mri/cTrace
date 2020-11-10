@@ -1,32 +1,32 @@
 #ifndef AGENT_H_
 #define AGENT_H_
 
-#include <vector>
+#include "Session.h"
+// #include "queue"
 
-class Agent{
+class Agent
+{
 public:
-    Agent(Session& session);
-    
-    virtual void act()=0;
-private:
-    Session& session;
-}
+    Agent();
+    virtual void act(Session &session) = 0;
+};
 
-class ContactTracer: public Agent{
+class ContactTracer : public Agent
+{
 public:
-    ContactTracer(Session& session);
-    
-    virtual void act();
-}
+    ContactTracer();
+    virtual void act(Session &session);
+};
 
-
-class Virus: public Agent{
+class Virus : public Agent
+{
 public:
-    Virus(int nodeInd, Session& session);
-    
-    virtual void act();
+    Virus(int nodeInd);
+
+    virtual void act(Session &session);
+
 private:
     const int nodeInd;
-}
+};
 
 #endif
