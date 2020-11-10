@@ -1,4 +1,6 @@
 	# All Targets
+s: clean main run
+
 all: main
 
 # Tool invocations
@@ -26,15 +28,15 @@ bin/Graph.o: bin/Tree.o
 bin/Tree.o: bin/Virus.o
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Tree.o src/Tree.cpp
 
-bin/Agent.o: bin/Virus.o
-	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Agent.o src/Agent.cpp
 
 bin/Virus.o: bin/ContactTracer.o
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Virus.o src/Virus.cpp
 
-bin/ContactTracer.o:
+bin/ContactTracer.o: bin/Agent.o
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/ContactTracer.o src/ContactTracer.cpp
 
+bin/Agent.o: 
+	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Agent.o src/Agent.cpp
 
 #Clean the build directory
 clean: 
@@ -42,3 +44,4 @@ clean:
 
 run:
 	bin/cTrace "config1.json"
+

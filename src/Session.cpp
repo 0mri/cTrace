@@ -1,34 +1,62 @@
 #include <iostream>
-#include "Session.h"
-#include <json.hpp>
 #include <fstream>
 #include <vector>
+#include "json.hpp"
+
+#include "Session.h"
+#include "Agent.h"
+
+
+// #include "Graph.h"
 
 using namespace std;
 using json = nlohmann::json;
 
 
-Session::Session(const string& path){
-    cout << "im here" << endl;
+Session::Session(const string &path)
+{
     std::ifstream i(path);
-    json j;
-    i >> j;
+    json j_input;
+    i >> j_input;
 
-    json output;
+    Graph *g1 = new Graph(j_input["graph"]);
+    g = *g1;
 
-    // vector<vector<int>> vect{
-    //     {1, 2, 3},
-    //     {4, 5, 6},
-    //     {7, 8, 9}};
+    if (j_input["tree"] == "C")
+        this->treeType = Cycle;
+    else if (j_input["tree"] == "R")
+        this->treeType = Root;
+    else if (j_input["tree"] == "M")
+        this->treeType = MaxRank;
 
-    // Graph g = new Graph(j["graph"]);
-    // Graph g(j["graph"]);
-    // g.print();
+    // vector <int> *input_agents = &j_input["agents"];
+    cout << j_input["agents"] << endl;
+    for (int i = 0; i < j_input["agents"].size(); i++)
+    {
+        if (j_input["agents"][i][0] == ("V"))
+            Agent *a = new Virus(j_input["agents"][i][1]);
+        else if (j_input["agents"][i][0] == ("C"))
+            Agent *c = new ContactTracer();
+    }
+}
 
-    output["graph"] = j["graph"];
-    // cout << j["students"]["omer"] << endl;
-    // Session sess(argv[1]);
+void Session::simulate()
+{
+    cout << this << endl;
+    cout << "simulate" << endl;
 
-    ofstream r("output.json");
-    output >> r;
+    // t
+    // this->g.print();
+    // TreeType a = this->getTreeType();
+    // cout << a << endl;
+}
+
+void Session::setGraph(const Graph &graph)
+{
+    this->g = graph;
+}
+
+TreeType Session::getTreeType() const
+{
+    return treeType;
 }

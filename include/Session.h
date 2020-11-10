@@ -3,7 +3,8 @@
 
 #include <vector>
 #include "Graph.h"
-
+#include <string>
+#include <queue>  
 class Agent;
 
 enum TreeType{
@@ -25,7 +26,8 @@ public:
     TreeType getTreeType() const;
     
 private:
-    // Graph g;
+    queue <Agent> agent_queue;
+    Graph g;
     TreeType treeType;
     std::vector<Agent*> agents;
 };
