@@ -4,6 +4,7 @@
 #include "Session.h"
 // #include "queue"
 
+
 class Agent
 {
 public:
@@ -22,9 +23,7 @@ class Virus : public Agent
 {
 public:
     Virus(int nodeInd);
-
     virtual void act(Session &session);
-
 private:
     const int nodeInd;
 };

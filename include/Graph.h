@@ -1,7 +1,12 @@
 #ifndef GRAPH_H_
 #define GRAPH_H_
 #include <vector>
-
+#include "Tree.h"
+enum VertexStatus{
+  Healthy,
+  Sick,
+  Carrier
+};
 class Graph{
 public:
     Graph();
@@ -12,8 +17,10 @@ public:
     bool isInfected(int nodeInd);
     void print();
     
+    Tree& BFS(Session &sess);
+    
 private:
-
+    std::vector<VertexStatus> vertex;
     std::vector<std::vector<int>> edges;
     
     

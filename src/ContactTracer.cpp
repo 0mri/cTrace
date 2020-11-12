@@ -4,5 +4,5 @@ ContactTracer::ContactTracer() : Agent() {}
 
 void ContactTracer::act(Session &session)
 {
-    std::cout << "Virus act" << std::endl;
+    std::cout << "C.Traver act" << std::endl;
 }

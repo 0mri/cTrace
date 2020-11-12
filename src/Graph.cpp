@@ -2,9 +2,10 @@
 #include <iostream>
 #include <vector>
 Graph::Graph() {}
-Graph::Graph(std::vector<std::vector<int>> matrix)
+
+Graph::Graph(std::vector<std::vector<int>> matrix) : vertex(matrix.size()), edges(matrix)
 {
-    edges = matrix;
+    // edges = matrix;
     // for (int i = 0; i < matrix.size(); i++)
     // {
     //     for (int j = 0; j < matrix[0].size(); j++)
@@ -49,6 +50,9 @@ Graph &Graph::operator=(const Graph &&other)
     }
     return *this;
 }
+
+
+
 
 void Graph::print()
 {
