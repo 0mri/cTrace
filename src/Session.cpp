@@ -6,14 +6,12 @@
 #include "Session.h"
 #include "Agent.h"
 
-
 // #include "Graph.h"
 
 using namespace std;
 using json = nlohmann::json;
 
-
-Session::Session(const string &path)
+Session::Session(const string &path) : g(), treeType(), agents()
 {
     std::ifstream i(path);
     json j_input;
@@ -30,13 +28,12 @@ Session::Session(const string &path)
         this->treeType = MaxRank;
 
     // vector <int> *input_agents = &j_input["agents"];
-    cout << j_input["agents"] << endl;
     for (int i = 0; i < j_input["agents"].size(); i++)
     {
         if (j_input["agents"][i][0] == ("V"))
-            Agent *a = new Virus(j_input["agents"][i][1]);
+            agents.push_back(new Virus(j_input["agents"][i][1]));
         else if (j_input["agents"][i][0] == ("C"))
-            Agent *c = new ContactTracer();
+            agents.push_back(new ContactTracer());
     }
 }
 
@@ -45,6 +42,20 @@ void Session::simulate()
     cout << this << endl;
     cout << "simulate" << endl;
 
+    cout << "agents[0]" << agents.size() << endl;
+
+    vector<Agent*>::iterator ptr; 
+    for (ptr = agents.begin(); ptr < agents.end(); ptr++)
+        agent_queue.push(*ptr);
+
+
+    vector<Agent*>::iterator ptr2; 
+    for (ptr2 = agents.begin(); ptr2 < agents.end(); ptr2++)
+        (*ptr2)->act(*this);
+        
+    cout << "adress of agents queue" << this->agent_queue.size() << endl;
+
+    this->g.print();
     // t
     // this->g.print();
     // TreeType a = this->getTreeType();

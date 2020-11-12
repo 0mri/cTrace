@@ -26,10 +26,10 @@ public:
     TreeType getTreeType() const;
     
 private:
-    queue <Agent> agent_queue;
+    std::queue <Agent*> agent_queue;
+    std::vector<Agent*> agents;
     Graph g;
     TreeType treeType;
-    std::vector<Agent*> agents;
 };
 
 #endif
