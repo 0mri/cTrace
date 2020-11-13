@@ -16,7 +16,6 @@ Session::Session(const string &path) : g(), treeType(), agents()
     std::ifstream i(path);
     json j_input;
     i >> j_input;
-
     Graph *g1 = new Graph(j_input["graph"]);
     g = *g1;
 
@@ -60,6 +59,17 @@ void Session::simulate()
     // this->g.print();
     // TreeType a = this->getTreeType();
     // cout << a << endl;
+
+
+
+    //### output to JSON ####
+    std::ofstream o("output.json");
+    json j_output;
+
+
+    vector <int> a = {1,2,3,4};
+    // j_output["Array"] = this->g;
+    o  << j_output << std::endl;
 }
 
 void Session::setGraph(const Graph &graph)
