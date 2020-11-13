@@ -2,13 +2,20 @@
 #define TREE_H_
 
 #include <vector>
-
+using namespace std;
 class Session;
 
 class Tree{
 public:
+
     Tree(int rootLabel);
+    Tree(Tree& t);
+
+    std::vector <Tree*> getChildren();
+    int getNode();
+
     void addChild(const Tree& child);
+
 
 
     static Tree* createTree(const Session& session, int rootLabel);
