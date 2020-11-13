@@ -16,17 +16,28 @@ enum TreeType{
 class Session{
 public:
     Session(const std::string& path);
-    
+   
+    Session(const Session &other);
+    Session& operator=(const Session &other);
+    Session& operator=(Session&& other);
+    Session(Session&& other);
+    virtual ~Session();
+
+
+
     void simulate();
     void addAgent(const Agent& agent);
     void setGraph(const Graph& graph);
     
     int enqueueInfected(int);
     int dequeueInfected();
+    
     TreeType getTreeType() const;
     
+    Graph& getGraph();
+
 private:
-    std::queue <Agent*> agent_queue;
+    std::queue <int> infected_queue;
     std::vector<Agent*> agents;
     Graph g;
     TreeType treeType;

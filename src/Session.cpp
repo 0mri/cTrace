@@ -11,12 +11,38 @@
 using namespace std;
 using json = nlohmann::json;
 
+// Copy constructor
+Session::Session(const Session &other)
+{
+}
+
+// Copy Assignment Operator
+Session &Session::operator=(const Session &other)
+{
+    this->g = other.g;
+    this->treeType = other.treeType;
+
+    for (int i = 0; i < agents.size(); i++)
+    {
+        /* code */
+    }
+}
+
+// Move Assignment Operator
+Session &Session::operator=(Session &&other) {}
+// Move Constructor
+Session::Session(Session &&other) {}
+// Destructor
+Session::~Session() {}
+
 Session::Session(const string &path) : g(), treeType(), agents()
 {
     std::ifstream i(path);
     json j_input;
     i >> j_input;
+
     Graph *g1 = new Graph(j_input["graph"]);
+
     g = *g1;
 
     if (j_input["tree"] == "C")
@@ -36,6 +62,11 @@ Session::Session(const string &path) : g(), treeType(), agents()
     }
 }
 
+Graph &Session::getGraph()
+{
+    return g;
+}
+
 void Session::simulate()
 {
     cout << this << endl;
@@ -43,16 +74,15 @@ void Session::simulate()
 
     cout << "agents[0]" << agents.size() << endl;
 
-    vector<Agent*>::iterator ptr; 
-    for (ptr = agents.begin(); ptr < agents.end(); ptr++)
-        agent_queue.push(*ptr);
+    // vector<Agent *>::iterator ptr;
+    // for (ptr = agents.begin(); ptr < agents.end(); ptr++)
+    //     infected_queue.push(*ptr);
 
-
-    vector<Agent*>::iterator ptr2; 
+    vector<Agent *>::iterator ptr2;
     for (ptr2 = agents.begin(); ptr2 < agents.end(); ptr2++)
         (*ptr2)->act(*this);
-        
-    cout << "adress of agents queue" << this->agent_queue.size() << endl;
+
+    cout << "adress of agents queue" << this->infected_queue.size() << endl;
 
     this->g.print();
     // t
@@ -60,21 +90,37 @@ void Session::simulate()
     // TreeType a = this->getTreeType();
     // cout << a << endl;
 
-
-
     //### output to JSON ####
     std::ofstream o("output.json");
     json j_output;
 
-
-    vector <int> a = {1,2,3,4};
+    vector<int> a = {1, 2, 3, 4};
     // j_output["Array"] = this->g;
-    o  << j_output << std::endl;
+    o << j_output << std::endl;
 }
 
 void Session::setGraph(const Graph &graph)
 {
     this->g = graph;
+}
+
+int Session::enqueueInfected(int ind)
+{
+    infected_queue.push(ind);
+}
+int Session::dequeueInfected()
+{
+    if (infected_queue.size() == 0)
+        return -1;
+
+    int temp = infected_queue.front();
+    infected_queue.pop();
+    return temp;
+}
+
+void Session::addAgent(const Agent &agent)
+{
+    agents.push_back(agent.clone());
 }
 
 TreeType Session::getTreeType() const

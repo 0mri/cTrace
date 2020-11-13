@@ -11,10 +11,17 @@ class Graph{
 public:
     Graph();
     Graph(std::vector<std::vector<int>> matrix);
-    Graph& operator=(const Graph& other);
-    Graph& operator=(const Graph&& other);
+
     void infectNode(int nodeInd);
+
     bool isInfected(int nodeInd);
+
+    void isolateNode(int nodeInd);
+
+    int nearestNeighbor(int nodeInd);
+
+    void changeStatus(int nodeInd, VertexStatus vs);
+
     void print();
     
     Tree& BFS(Session &sess);
