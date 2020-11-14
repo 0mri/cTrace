@@ -2,36 +2,43 @@
 #define GRAPH_H_
 #include <vector>
 #include "Tree.h"
-enum VertexStatus{
+enum VertexStatus
+{
   Healthy,
   Sick,
   Carrier
 };
-class Graph{
+class Graph
+{
 public:
-    Graph();
-    Graph(std::vector<std::vector<int>> matrix);
+  Graph();
+  Graph(std::vector<std::vector<int>> matrix);
 
-    void infectNode(int nodeInd);
+  void infectNode(int nodeInd);
 
-    bool isInfected(int nodeInd);
+  bool isInfected(int nodeInd);
 
-    void isolateNode(int nodeInd);
+  void isolateNode(int nodeInd);
 
-    int nearestNeighbor(int nodeInd);
+  int nearestNeighbor(int nodeInd);
 
-    void changeStatus(int nodeInd, VertexStatus vs);
+  void changeStatus(int nodeInd, VertexStatus vs);
 
-    char getStatus(int nodeInd);
+  bool hasEdge(int i, int j);
 
-    void print();
-    
-    Tree& BFS(Session &sess);
-    
+  VertexStatus getNodeStatus(int nodeInd);
+
+  char getStatus(int nodeInd);
+
+  vector<vector<int>> getGraph();
+
+  void print();
+
+  Tree &BFS(const Session &sess, int nodeInd);
+
 private:
-    std::vector<VertexStatus> vertex;
-    std::vector<std::vector<int>> edges;
+  std::vector<VertexStatus> vertex;
+  std::vector<std::vector<int>> edges;
 };
 
 #endif
-

@@ -83,13 +83,33 @@ char Graph::getStatus(int nodeInd)
     else if (this->vertex[nodeInd] == Carrier)
         return 'C';
 }
+
+VertexStatus Graph::getNodeStatus(int nodeInd)
+{
+    return this->vertex[nodeInd];
+}
+
+bool Graph::hasEdge(int i, int j)
+{
+    return edges[i][j] == 1;
+}
+vector<vector<int>> Graph::getGraph()
+{
+    return this->edges;
+}
 void Graph::print()
 {
     for (uint i = 0; i < edges.size(); i++)
     {
         cout << i << "." << this->getStatus(i) << " - ";
-        for (uint j = 0; j < edges[0].size(); j++)
+        for (uint j = 0; j < edges[i].size(); j++)
             std::cout << edges[i][j] << " ";
         std::cout << "" << std::endl;
     }
+}
+
+Tree &BFS(Session &sess, int nodeInd)
+{
+    Tree *root = Tree::createTree(sess, nodeInd);
+    return *root;
 }

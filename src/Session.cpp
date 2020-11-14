@@ -11,7 +11,7 @@
 using namespace std;
 using json = nlohmann::json;
 //Constructor
-Session::Session(const string &path) : g(), treeType(), agents(), curCycle(0)
+Session::Session(const string &path) : g(), treeType(), agents(), currCycle(0)
 {
     std::ifstream i(path);
     json j_input;
@@ -37,9 +37,9 @@ Session::Session(const string &path) : g(), treeType(), agents(), curCycle(0)
 }
 
 // Copy constructor
-Session::Session(const Session &other) : infected_queue(other.infected_queue), agents(), g(other.g), treeType(other.treeType), curCycle(other.curCycle)
+Session::Session(const Session &other) : infected_queue(other.infected_queue), agents(), g(other.g), treeType(other.treeType), currCycle(other.currCycle)
 {
-    for (int i = 0; i <= other.agents.size(); i++)
+    for (uint i = 0; i <= other.agents.size(); i++)
         this->agents.push_back(other.agents[i]->clone());
 }
 
@@ -49,7 +49,7 @@ Session &Session::operator=(const Session &other)
     this->infected_queue = other.infected_queue;
     this->g = other.g;
     this->treeType = other.treeType;
-    this->curCycle = other.curCycle;
+    this->currCycle = other.currCycle;
 
     while (agents.size() != 0)
     {
@@ -64,7 +64,7 @@ Session &Session::operator=(const Session &other)
 }
 
 // Move Constructor
-Session::Session(Session &&other) : infected_queue(other.infected_queue), agents(other.agents), g(other.g), treeType(other.treeType), curCycle(other.curCycle)
+Session::Session(Session &&other) : infected_queue(other.infected_queue), agents(other.agents), g(other.g), treeType(other.treeType), currCycle(other.currCycle)
 {
     for (size_t i = 0; i < other.agents.size(); i++)
         other.agents[i] = nullptr;
@@ -76,7 +76,7 @@ Session &Session::operator=(Session &&other)
     this->infected_queue = other.infected_queue;
     this->g = other.g;
     this->treeType = other.treeType;
-    this->curCycle = other.curCycle;
+    this->currCycle = other.currCycle;
     for (size_t i = 0; i < agents.size(); i++)
         delete agents[i];
 
@@ -107,6 +107,20 @@ void Session::simulate()
     for (agent = agents.begin(); agent < agents.end(); agent++)
         (*agent)->act(*this);
 
+    while (isDone())
+    {
+        cout << this->currCycle << endl;
+        // for (agent = agents.begin(); agent < agents.end(); agent++)
+        //     (*agent).act(*this);
+        for (size_t i = 0; i < agents.size(); i++)
+        {
+            agents[i]->act(*this);
+        }
+
+        this->currCycle++;
+    }
+    cout << "Done!" << endl;
+
     this->g.print();
     this->JSON_Output();
 }
@@ -116,16 +130,16 @@ void Session::setGraph(const Graph &graph)
     this->g = graph;
 }
 
-int Session::enqueueInfected(int ind)
+void Session::enqueueInfected(int nodeInd)
 {
-    infected_queue.push(ind);
+    this->infected_queue.push(nodeInd);
 }
 int Session::dequeueInfected()
 {
-    if (infected_queue.size() == 0)
+    if (infected_queue.empty())
         return -1;
 
-    int temp = infected_queue.front();
+    int temp = infected_queue.top();
     infected_queue.pop();
     return temp;
 }
@@ -140,14 +154,26 @@ TreeType Session::getTreeType() const
     return treeType;
 }
 
-
-bool Session::isDone(){
-    return 0;
+bool Session::isDone()
+{
+    vector<vector<int>> graph = g.getGraph();
+    for (size_t i = 0; i < graph.size(); i++)
+    {
+        VertexStatus curStatus = g.getNodeStatus(i);
+        for (size_t j = 0; j < graph[i].size(); j++)
+            if (i != j && (g.hasEdge(i, j) && g.getNodeStatus(j) != curStatus)) // return false if there is two different vertexes in the same tying componnent with deifferent status
+                return false;
+    }
+    return true;
 }
 
+int Session::getCurrCycle(){
+    return this->currCycle;
+}
+
+//Output to JSON file
 void Session::JSON_Output()
 {
-    //### output to JSON ####
     std::ofstream o("output.json");
     json j_output;
 

@@ -4,7 +4,7 @@
 #include <vector>
 #include "Graph.h"
 #include <string>
-#include <queue>  
+#include <stack>  
 class Agent;
 
 enum TreeType{
@@ -29,21 +29,23 @@ public:
     void addAgent(const Agent& agent);
     void setGraph(const Graph& graph);
     
-    int enqueueInfected(int);
+    void enqueueInfected(int);
     int dequeueInfected();
     
     TreeType getTreeType() const;
     
     Graph& getGraph();
+
+    int getCurrCycle();
     bool isDone();
     void JSON_Output();
 
 private:
-    std::queue <int> infected_queue;
+    std::stack <int> infected_queue;
     std::vector<Agent*> agents;
     Graph g;
     TreeType treeType;
-    int curCycle;
+    int currCycle;
 };
 
 #endif

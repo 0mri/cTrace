@@ -9,6 +9,8 @@ Virus::Virus(int index) : Agent(), nodeInd(index) {}
 
 void Virus::act(Session &session)
 {
+    cout << "Virus act" << endl;
+
     Graph &g1 = session.getGraph();
     if (!g1.isInfected(nodeInd)) //if this node is not infected
     {
@@ -18,11 +20,11 @@ void Virus::act(Session &session)
     int nr_nbr = g1.nearestNeighbor(nodeInd);
     if (nr_nbr != -1) //if there is neighbors
     {
-        g1.changeStatus(nr_nbr, Carrier);
         Agent *v1 = new Virus(nr_nbr);
+        g1.changeStatus(nr_nbr, Carrier);
         session.addAgent(*v1);
         
-        delete (v1);
+        delete v1;
         v1 = nullptr;
     }
 }
