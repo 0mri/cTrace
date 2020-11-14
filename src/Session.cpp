@@ -10,32 +10,8 @@
 
 using namespace std;
 using json = nlohmann::json;
-
-// Copy constructor
-Session::Session(const Session &other)
-{
-}
-
-// Copy Assignment Operator
-Session &Session::operator=(const Session &other)
-{
-    this->g = other.g;
-    this->treeType = other.treeType;
-
-    for (int i = 0; i < agents.size(); i++)
-    {
-        /* code */
-    }
-}
-
-// Move Assignment Operator
-Session &Session::operator=(Session &&other) {}
-// Move Constructor
-Session::Session(Session &&other) {}
-// Destructor
-Session::~Session() {}
-
-Session::Session(const string &path) : g(), treeType(), agents()
+//Constructor
+Session::Session(const string &path) : g(), treeType(), agents(), curCycle(0)
 {
     std::ifstream i(path);
     json j_input;
@@ -43,7 +19,8 @@ Session::Session(const string &path) : g(), treeType(), agents()
 
     Graph *g1 = new Graph(j_input["graph"]);
 
-    g = *g1;
+    this->g = *g1;
+    // g = new Graph(j_input["graph"]);
 
     if (j_input["tree"] == "C")
         this->treeType = Cycle;
@@ -52,14 +29,71 @@ Session::Session(const string &path) : g(), treeType(), agents()
     else if (j_input["tree"] == "M")
         this->treeType = MaxRank;
 
-    // vector <int> *input_agents = &j_input["agents"];
-    for (int i = 0; i < j_input["agents"].size(); i++)
-    {
+    for (uint i = 0; i < j_input["agents"].size(); i++)
         if (j_input["agents"][i][0] == ("V"))
             agents.push_back(new Virus(j_input["agents"][i][1]));
         else if (j_input["agents"][i][0] == ("C"))
             agents.push_back(new ContactTracer());
+}
+
+// Copy constructor
+Session::Session(const Session &other) : infected_queue(other.infected_queue), agents(), g(other.g), treeType(other.treeType), curCycle(other.curCycle)
+{
+    for (int i = 0; i <= other.agents.size(); i++)
+        this->agents.push_back(other.agents[i]->clone());
+}
+
+// Copy Assignment Operator
+Session &Session::operator=(const Session &other)
+{
+    this->infected_queue = other.infected_queue;
+    this->g = other.g;
+    this->treeType = other.treeType;
+    this->curCycle = other.curCycle;
+
+    while (agents.size() != 0)
+    {
+        delete agents[0];
+        agents.erase(agents.begin());
     }
+
+    for (uint i = 0; i < other.agents.size(); ++i)
+        this->agents.push_back(other.agents[i]->clone());
+
+    return *this;
+}
+
+// Move Constructor
+Session::Session(Session &&other) : infected_queue(other.infected_queue), agents(other.agents), g(other.g), treeType(other.treeType), curCycle(other.curCycle)
+{
+    for (size_t i = 0; i < other.agents.size(); i++)
+        other.agents[i] = nullptr;
+}
+
+// Move Assignment Operator
+Session &Session::operator=(Session &&other)
+{
+    this->infected_queue = other.infected_queue;
+    this->g = other.g;
+    this->treeType = other.treeType;
+    this->curCycle = other.curCycle;
+    for (size_t i = 0; i < agents.size(); i++)
+        delete agents[i];
+
+    for (size_t i = 0; i < other.agents.size(); i++)
+    {
+        agents.push_back(other.agents[i]);
+        other.agents[i] = nullptr;
+    }
+    return *this;
+}
+
+// Destructor
+Session::~Session()
+{
+    vector<Agent *>::iterator it;
+    for (it = agents.begin(); it != agents.end(); ++it)
+        delete *it;
 }
 
 Graph &Session::getGraph()
@@ -69,34 +103,12 @@ Graph &Session::getGraph()
 
 void Session::simulate()
 {
-    cout << this << endl;
-    cout << "simulate" << endl;
-
-    cout << "agents[0]" << agents.size() << endl;
-
-    // vector<Agent *>::iterator ptr;
-    // for (ptr = agents.begin(); ptr < agents.end(); ptr++)
-    //     infected_queue.push(*ptr);
-
-    vector<Agent *>::iterator ptr2;
-    for (ptr2 = agents.begin(); ptr2 < agents.end(); ptr2++)
-        (*ptr2)->act(*this);
-
-    cout << "adress of agents queue" << this->infected_queue.size() << endl;
+    vector<Agent *>::iterator agent;
+    for (agent = agents.begin(); agent < agents.end(); agent++)
+        (*agent)->act(*this);
 
     this->g.print();
-    // t
-    // this->g.print();
-    // TreeType a = this->getTreeType();
-    // cout << a << endl;
-
-    //### output to JSON ####
-    std::ofstream o("output.json");
-    json j_output;
-
-    vector<int> a = {1, 2, 3, 4};
-    // j_output["Array"] = this->g;
-    o << j_output << std::endl;
+    this->JSON_Output();
 }
 
 void Session::setGraph(const Graph &graph)
@@ -126,4 +138,21 @@ void Session::addAgent(const Agent &agent)
 TreeType Session::getTreeType() const
 {
     return treeType;
+}
+
+
+bool Session::isDone(){
+    return 0;
+}
+
+void Session::JSON_Output()
+{
+    //### output to JSON ####
+    std::ofstream o("output.json");
+    json j_output;
+
+    j_output["infected"] = {1, 2, 3, 4};
+    // j_output["graph"] = this->getGraph();
+    // j_output["Array"] = this->g;
+    o << j_output << std::endl;
 }

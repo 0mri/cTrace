@@ -35,12 +35,15 @@ public:
     TreeType getTreeType() const;
     
     Graph& getGraph();
+    bool isDone();
+    void JSON_Output();
 
 private:
     std::queue <int> infected_queue;
     std::vector<Agent*> agents;
     Graph g;
     TreeType treeType;
+    int curCycle;
 };
 
 #endif

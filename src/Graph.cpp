@@ -2,7 +2,6 @@
 #include <iostream>
 #include <vector>
 
-
 Graph::Graph() {}
 
 Graph::Graph(std::vector<std::vector<int>> matrix) : vertex(matrix.size(), Healthy), edges(matrix) {}
@@ -42,7 +41,7 @@ void Graph::infectNode(int nodeInd)
 void Graph::isolateNode(int nodeInd)
 {
 
-    for (int i = 0; i < edges.size(); i++)
+    for (uint i = 0; i < edges.size(); i++)
     {
         if (this->edges[nodeInd][i] == 1)
         {
@@ -68,21 +67,29 @@ void Graph::changeStatus(int nodeInd, VertexStatus vs)
 
 int Graph::nearestNeighbor(int nodeInd)
 {
-    for (int i = 0; i < edges.size(); i++)
+    for (uint i = 0; i < edges.size(); i++)
         if (edges[nodeInd][i] == 1)
             return i;
 
     return -1;
 }
 
+char Graph::getStatus(int nodeInd)
+{
+    if (this->vertex[nodeInd] == Healthy)
+        return 'H';
+    else if (this->vertex[nodeInd] == Sick)
+        return 'S';
+    else if (this->vertex[nodeInd] == Carrier)
+        return 'C';
+}
 void Graph::print()
 {
-    for (int i = 0; i < edges.size(); i++)
+    for (uint i = 0; i < edges.size(); i++)
     {
-        for (int j = 0; j < edges[0].size(); j++)
-        {
+        cout << i << "." << this->getStatus(i) << " - ";
+        for (uint j = 0; j < edges[0].size(); j++)
             std::cout << edges[i][j] << " ";
-        }
         std::cout << "" << std::endl;
     }
 }

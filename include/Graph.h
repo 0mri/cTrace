@@ -22,6 +22,8 @@ public:
 
     void changeStatus(int nodeInd, VertexStatus vs);
 
+    char getStatus(int nodeInd);
+
     void print();
     
     Tree& BFS(Session &sess);
@@ -29,8 +31,6 @@ public:
 private:
     std::vector<VertexStatus> vertex;
     std::vector<std::vector<int>> edges;
-    
-    
 };
 
 #endif

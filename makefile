@@ -1,17 +1,13 @@
 # All Targets
-all: bin/cTrace
+build: bin/cTrace
 
-# Tool invocations
-# Executable "hello" depends on the files hello.o and run.o.
 bin/cTrace: bin/main.o
-	@echo 'Building target: main'
 	@echo 'Invoking: C++ Linker'
 	g++ -o bin/cTrace bin/*.o
-	@echo ' '
+	@echo 'Done.'
 
 
 
-# SOURCES := src/main.cpp src/Session.cpp src/Graph.cpp src/Tree.cpp src/Agent.cpp src/Virus.cpp src/ContactTracer.cpp
 
 # Depends on the source and header files
 bin/main.o: bin/Session.o bin/Graph.o bin/CycleTree.o bin/MaxRankTree.o bin/RootTree.o bin/Tree.o bin/Virus.o bin/ContactTracer.o bin/Agent.o
@@ -58,4 +54,4 @@ ml:
 	valgrind --leak-check=full --show-reachable=yes bin/cTrace config1.json
 
 # clean, compile and run
-s: clean all run
+s: clean build run
