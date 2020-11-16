@@ -9,7 +9,6 @@ void ContactTracer::act(Session &session)
     int nodeInd = session.dequeueInfected();
     if (nodeInd != -1)
     {
-
         // root->BFS(session);
         // session.getGraph().BFS();
         // Tree *bfsTree = Graph::BFS(session, nodeInd);

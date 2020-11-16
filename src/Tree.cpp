@@ -9,7 +9,6 @@ Tree::Tree(Tree &t) : node(t.getNode()), children()
     for (it = children.begin(); it < children.end(); it++)
         children.push_back(*it);
 }
-// Tree::Tree(Tree& t) : node(t.getNode()) {}
 
 std::vector<Tree *> Tree::getChildren()
 {
@@ -26,6 +25,7 @@ void Tree::addChild(const Tree &child)
     // children.push_back(new Tree(child));
 }
 
+
 Tree *Tree::createTree(const Session &session, int rootLabel)
 {
     TreeType currTreeType = session.getTreeType();
@@ -37,4 +37,5 @@ Tree *Tree::createTree(const Session &session, int rootLabel)
         t = new CycleTree(rootLabel, 9);
     else if (currTreeType == Root)
         t = new RootTree(rootLabel);
+
 }
