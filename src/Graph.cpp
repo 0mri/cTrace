@@ -1,7 +1,7 @@
 #include "Graph.h"
 #include <iostream>
 #include <vector>
-
+#include "Tree.h"
 Graph::Graph() {}
 
 Graph::Graph(std::vector<std::vector<int>> matrix) : vertex(matrix.size(), Healthy), edges(matrix) {}
@@ -108,7 +108,7 @@ void Graph::print()
     }
 }
 
-Tree &BFS(Session &sess, int nodeInd)
+Tree &Graph::BFS(const Session &sess, int nodeInd)
 {
     Tree *root = Tree::createTree(sess, nodeInd);
     return *root;

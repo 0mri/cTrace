@@ -10,7 +10,7 @@ bin/cTrace: bin/main.o
 
 
 # Depends on the source and header files
-bin/main.o: bin/Session.o bin/Graph.o s bin/Virus.o bin/ContactTracer.o bin/Agent.o
+bin/main.o: bin/Session.o bin/Graph.o bin/CycleTree.o bin/MaxRankTree.o bin/RootTree.o bin/Tree.o s bin/Virus.o bin/ContactTracer.o bin/Agent.o
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/main.o src/main.cpp
 
 bin/Session.o: 
