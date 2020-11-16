@@ -2,6 +2,8 @@
 #define GRAPH_H_
 #include <vector>
 #include "Tree.h"
+#include "Session.h"
+
 enum VertexStatus{
   Healthy,
   Sick,
@@ -15,6 +17,7 @@ public:
     Graph& operator=(const Graph&& other);
     void infectNode(int nodeInd);
     bool isInfected(int nodeInd);
+    Tree BFS(int start, Session &s);
     void print();
     
     Tree& BFS(Session &sess);

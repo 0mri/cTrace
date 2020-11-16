@@ -1,6 +1,8 @@
 #include "Graph.h"
 #include <iostream>
 #include <vector>
+//#include <Session.h>
+#include "Tree.h"
 Graph::Graph() {}
 
 Graph::Graph(std::vector<std::vector<int>> matrix) : vertex(matrix.size()), edges(matrix)
@@ -52,9 +54,53 @@ Graph &Graph::operator=(const Graph &&other)
 }
 
 
+// Function to perform BFS on the graph
+Tree Graph::BFS(int start, Session &s)
+{
+    // Visited vector to so that
+    // a vertex is not visited more than once
+    // Initializing the vector to false as no
+    // vertex is visited at the beginning
+    Tree t;
+    if(s.getTreeType()==Cycle)
+         t = new CycleTree(start);
+    if(s.getTreeType()==MaxRankTree)
+        t = new MaxRankTree(start);
+    if(s.getTreeType()==RootTree)
+        t = new RootTree(start);
+    vector<bool> visited(edges.size(), false);
+    vector<int> q;
+    q.push_back(start);
+
+    // Set source as visited
+    visited[start] = true;
+
+    int vis;
+    while (!q.empty()) {
+        vis = q[0];
+
+        // Print the current node
+        cout << vis << " ";
+        q.erase(q.begin());
+
+        // For every adjacent vertex to the current vertex
+        for (int i = 0; i < edges.size(); i++) {
+            if (edges[vis][i] == 1 && (!visited[i])) {
+
+                // Push the adjacent node to the queue
+                q.push_back(i);
+
+                // Set
+                visited[i] = true;
+            }
+        }
+    }
+}
 
 
-void Graph::print()
+
+
+            void Graph::print()
 {
     for (int i = 0; i < edges.size(); i++)
     {

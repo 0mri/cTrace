@@ -1,4 +1,5 @@
 #include "Tree.h"
+#include "Session.h"
 
 
 
@@ -29,5 +30,9 @@ void Tree::addChild(const Tree& child) {
 
 
 Tree* Tree::createTree(const Session& session, int rootLabel){
-    // for(Iterator it = vector<Tree*>::Iterator; it)
+
+
+}
+
+
 }
