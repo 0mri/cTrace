@@ -10,6 +10,11 @@ public:
 
     Tree(int rootLabel);
     Tree(Tree& t);
+    virtual ~Tree();
+    Tree(const Tree &otherTree);
+    Tree(Tree && otherTree);
+    Tree & operator=(const Tree &otherTree);
+    Tree & operator=(Tree && otherTree);
 
     std::vector <Tree*> getChildren();
     int getNode();
@@ -23,6 +28,7 @@ public:
 private:
     int node;
     std::vector<Tree*> children;
+    void clear();
 };
 
 class CycleTree: public Tree{
