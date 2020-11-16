@@ -4,7 +4,7 @@
 #include <vector>
 #include "Graph.h"
 #include <string>
-#include <queue>  
+#include <stack>  
 class Agent;
 
 enum TreeType{
@@ -16,20 +16,36 @@ enum TreeType{
 class Session{
 public:
     Session(const std::string& path);
-    
+   
+    Session(const Session &other);
+    Session& operator=(const Session &other);
+    Session& operator=(Session&& other);
+    Session(Session&& other);
+    virtual ~Session();
+
+
+
     void simulate();
     void addAgent(const Agent& agent);
     void setGraph(const Graph& graph);
     
-    int enqueueInfected(int);
+    void enqueueInfected(int);
     int dequeueInfected();
+    
     TreeType getTreeType() const;
     
+    Graph& getGraph();
+
+    int getCurrCycle();
+    bool isDone();
+    void JSON_Output();
+
 private:
-    std::queue <Agent*> agent_queue;
+    std::stack <int> infected_queue;
     std::vector<Agent*> agents;
     Graph g;
     TreeType treeType;
+    int currCycle;
 };
 
 #endif
