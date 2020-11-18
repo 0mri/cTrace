@@ -33,7 +33,7 @@ public:
 
   char getStatus(int nodeInd);
 
-  vector<vector<int>> getEdges();
+  vector<vector<int>> &getEdges();
 
   void print();
 

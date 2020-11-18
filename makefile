@@ -1,5 +1,5 @@
 # All Targets
-build: bin/cTrace
+all: bin/cTrace
 
 bin/cTrace: bin/main.o
 	@echo 'Invoking: C++ Linker'
@@ -10,7 +10,7 @@ bin/cTrace: bin/main.o
 
 
 # Depends on the source and header files
-bin/main.o: bin/Session.o bin/Graph.o bin/CycleTree.o bin/MaxRankTree.o bin/RootTree.o bin/Tree.o s bin/Virus.o bin/ContactTracer.o bin/Agent.o
+bin/main.o: bin/Session.o bin/Graph.o bin/CycleTree.o bin/MaxRankTree.o bin/RootTree.o bin/Tree.o bin/Virus.o bin/ContactTracer.o bin/Agent.o
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/main.o src/main.cpp
 
 bin/Session.o: 
@@ -30,7 +30,6 @@ bin/RootTree.o:
 
 bin/Tree.o: 
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Tree.o src/Tree.cpp
-
 
 bin/Virus.o: 
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Virus.o src/Virus.cpp
@@ -54,4 +53,4 @@ ml:
 	valgrind --leak-check=full --show-reachable=yes bin/cTrace config1.json
 
 # clean, compile and run
-s: clean build run
+s: clean all run

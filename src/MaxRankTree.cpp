@@ -3,7 +3,7 @@
 
 MaxRankTree::MaxRankTree(int rootLabel) : Tree(rootLabel) {}
 
-int RootTree::traceTree()
+int MaxRankTree::traceTree()
 {
     queue<Tree *> tree_q;
     tree_q.push(this);

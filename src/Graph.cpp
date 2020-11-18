@@ -4,29 +4,11 @@
 #include "Tree.h"
 #include "queue"
 
-Graph::Graph(std::vector<std::vector<int>> matrix) : vertex(matrix.size(), Healthy), edges(matrix) {}
+Graph::Graph() : vertex(), edges() {}
 
-// Graph &Graph::operator=(const Graph &other)
-// {
-//     std::cout << "MOVE ASSIGNMENT" << std::endl;
-//     // std::cout << &edges << std::endl;
-//     this->edges = other.edges;
-//     // std::cout << &edges << std::endl;
-
-//     //     // std::copy(other._data, other._data + _length, _data);
-//     // }
-//     return *this;
-// }
-// Graph &Graph::operator=(const Graph &&other)
-// {
-//     if (this != &other)
-//     {
-//         // delete[] &edges;      // Delete the string's original dindata.
-//         // this->data_ = other.data_; // Copy the other string's data into this string.
-//         // other.data_ = nullptr;     // Finally, reset the other string's data pointer.
-//     }
-//     return *this;
-// }
+Graph::Graph(std::vector<std::vector<int>> matrix) : vertex(matrix.size(), Healthy), edges(matrix) {
+    
+}
 
 bool Graph::isInfected(int nodeInd)
 {
@@ -94,7 +76,7 @@ bool Graph::hasEdge(int i, int j)
 {
     return this->getEdges()[i][j] == 1;
 }
-vector<vector<int>> Graph::getEdges()
+vector<vector<int>> &Graph::getEdges()
 {
     return this->edges;
 }

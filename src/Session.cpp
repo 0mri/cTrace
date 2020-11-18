@@ -2,23 +2,22 @@
 #include <fstream>
 #include <vector>
 #include "json.hpp"
-
 #include "Session.h"
 #include "Agent.h"
-
-// #include "Graph.h"
+#include "Graph.h"
 
 using namespace std;
 using json = nlohmann::json;
 //Constructor
-Session::Session(const string &path) : g(),  treeType(), agents(), infected_queue(), currCycle(0)
+Session::Session(const string &path) : g(), treeType(), agents(), infected_queue(), currCycle(0)
 {
     std::ifstream i(path);
     json j_input;
     i >> j_input;
 
-    this->g = Graph(j_input["graph"]);
-
+    Graph *g1 = new Graph(j_input["graph"]);
+    this->g = *g1;
+    // g = Graph(j_input["graph"]);
     if (j_input["tree"] == "C")
         this->treeType = Cycle;
     else if (j_input["tree"] == "R")
@@ -100,25 +99,29 @@ Graph &Session::getGraph()
 
 void Session::simulate()
 {
-    vector<Agent *>::iterator agent;
+    // vector<Agent *>::iterator agent;
     // for (agent = agents.begin(); agent < agents.end(); agent++)
     //     (*agent)->act(*this);
-
+    // this->g.print();
     while (!isDone())
     {
         // cout << this->currCycle << endl;
         // for (agent = agents.begin(); agent < agents.end(); agent++)
         //     (*agent).act(*this);
         int cur_size = agents.size();
+        cout << "cur_sizes" << cur_size << endl;
         for (int i = 0; i < cur_size; i++)
+        {
+            cout << "agent act " << endl;
             agents[i]->act(*this);
+        }
 
         this->currCycle++;
     }
     cout << "Done!" << endl;
 
     this->g.print();
-    this->JSON_Output();
+    this->json_output();
 }
 
 void Session::setGraph(const Graph &graph)
@@ -153,13 +156,20 @@ TreeType Session::getTreeType() const
 
 bool Session::isDone()
 {
-    vector<vector<int>> graph = g.getEdges();
-    for (size_t i = 0; i < graph.size(); i++)
+    // return false;
+    for (uint i = 0; i < g.getEdges().size(); i++)
     {
         VertexStatus curStatus = g.getNodeStatus(i);
-        for (size_t j = 0; j < graph[i].size(); j++)
+        for (uint j = 0; j < g.getEdges()[i].size(); j++)
+        {
+
+            cout << i << "," << j << ", Has Edge: " << g.hasEdge(i, j) << " same status " << (g.getNodeStatus(j) == curStatus) << endl;
             if (i != j && (g.hasEdge(i, j) && g.getNodeStatus(j) != curStatus)) // return false if there is two different vertexes in the same tying componnent with deifferent status
+            {
+                cout << "False" << endl;
                 return false;
+            }
+        }
     }
     return true;
 }
@@ -170,12 +180,19 @@ int Session::getCurrCycle()
 }
 
 //Output to JSON file
-void Session::JSON_Output()
+void Session::json_output()
 {
     std::ofstream o("output.json");
     json j_output;
 
     j_output["infected"] = {1, 2, 3, 4};
+
+    for (size_t i = 0; i < this->getGraph().getEdges().size(); i++)
+        for (size_t j = 0; j < this->getGraph().getEdges()[i].size(); j++)
+        {
+            j_output["graph"][i][j] = this->getGraph().getEdges()[i][j];
+        }
+
     // j_output["graph"] = this->getGraph();
     // j_output["Array"] = this->g;
     o << j_output << std::endl;

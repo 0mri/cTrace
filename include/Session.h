@@ -18,6 +18,7 @@ class Session
 {
 public:
   Session(const std::string &path);
+  Session();
 
   Session(const Session &other);
   Session &operator=(const Session &other);
@@ -38,7 +39,7 @@ public:
   int getCurrCycle();
 
   bool isDone();
-  void JSON_Output();
+  void json_output();
 
 private:
   std::queue<int> infected_queue;

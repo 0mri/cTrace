@@ -25,7 +25,6 @@ void Tree::addChild(const Tree &child) //NOT SURE
     }
 }
 
-
 Tree *Tree::createTree(const Session &session, int rootLabel)
 {
     TreeType currTreeType = session.getTreeType();
@@ -49,7 +48,7 @@ Tree::~Tree()
 Tree::Tree(int rootLabel) : node(rootLabel), children() {}
 
 //Copy Constructor
-Tree::Tree(Tree &t) : node(t.getNode()), children()
+Tree::Tree(const Tree &t) : node(t.node), children()
 {
     vector<Tree *>::iterator iter;
     for (iter = children.begin(); iter < children.end(); iter++)
