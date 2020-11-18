@@ -2,7 +2,6 @@
 #define AGENT_H_
 
 #include "Session.h"
-// #include "queue"
 
 class Agent
 {

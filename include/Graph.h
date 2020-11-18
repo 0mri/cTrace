@@ -2,6 +2,7 @@
 #define GRAPH_H_
 #include <vector>
 #include "Tree.h"
+#include <queue>
 enum VertexStatus
 {
   Healthy,
@@ -22,6 +23,8 @@ public:
 
   int nearestNeighbor(int nodeInd);
 
+  vector<int> &getNeighbors(int nodeInd);
+
   void changeStatus(int nodeInd, VertexStatus vs);
 
   bool hasEdge(int i, int j);
@@ -30,11 +33,11 @@ public:
 
   char getStatus(int nodeInd);
 
-  vector<vector<int>> getGraph();
+  vector<vector<int>> getEdges();
 
   void print();
 
-  Tree &BFS(const Session &sess, int nodeInd);
+  Tree *bfs(Session &sess, int nodeInd);
 
 private:
   std::vector<VertexStatus> vertex;

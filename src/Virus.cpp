@@ -23,7 +23,7 @@ void Virus::act(Session &session)
         Agent *v1 = new Virus(nr_nbr);
         g1.changeStatus(nr_nbr, Carrier);
         session.addAgent(*v1);
-        
+
         delete v1;
         v1 = nullptr;
     }

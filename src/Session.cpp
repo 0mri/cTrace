@@ -11,16 +11,13 @@
 using namespace std;
 using json = nlohmann::json;
 //Constructor
-Session::Session(const string &path) : g(), treeType(), agents(), currCycle(0)
+Session::Session(const string &path) : g(),  treeType(), agents(), infected_queue(), currCycle(0)
 {
     std::ifstream i(path);
     json j_input;
     i >> j_input;
 
-    Graph *g1 = new Graph(j_input["graph"]);
-
-    this->g = *g1;
-    // g = new Graph(j_input["graph"]);
+    this->g = Graph(j_input["graph"]);
 
     if (j_input["tree"] == "C")
         this->treeType = Cycle;
@@ -104,18 +101,17 @@ Graph &Session::getGraph()
 void Session::simulate()
 {
     vector<Agent *>::iterator agent;
-    for (agent = agents.begin(); agent < agents.end(); agent++)
-        (*agent)->act(*this);
+    // for (agent = agents.begin(); agent < agents.end(); agent++)
+    //     (*agent)->act(*this);
 
-    while (isDone())
+    while (!isDone())
     {
-        cout << this->currCycle << endl;
+        // cout << this->currCycle << endl;
         // for (agent = agents.begin(); agent < agents.end(); agent++)
         //     (*agent).act(*this);
-        for (size_t i = 0; i < agents.size(); i++)
-        {
+        int cur_size = agents.size();
+        for (int i = 0; i < cur_size; i++)
             agents[i]->act(*this);
-        }
 
         this->currCycle++;
     }
@@ -136,10 +132,11 @@ void Session::enqueueInfected(int nodeInd)
 }
 int Session::dequeueInfected()
 {
+
     if (infected_queue.empty())
         return -1;
 
-    int temp = infected_queue.top();
+    int temp = infected_queue.front();
     infected_queue.pop();
     return temp;
 }
@@ -156,7 +153,7 @@ TreeType Session::getTreeType() const
 
 bool Session::isDone()
 {
-    vector<vector<int>> graph = g.getGraph();
+    vector<vector<int>> graph = g.getEdges();
     for (size_t i = 0; i < graph.size(); i++)
     {
         VertexStatus curStatus = g.getNodeStatus(i);
@@ -167,7 +164,8 @@ bool Session::isDone()
     return true;
 }
 
-int Session::getCurrCycle(){
+int Session::getCurrCycle()
+{
     return this->currCycle;
 }
 

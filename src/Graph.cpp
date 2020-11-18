@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 #include "Tree.h"
-Graph::Graph() {}
+#include "queue"
 
 Graph::Graph(std::vector<std::vector<int>> matrix) : vertex(matrix.size(), Healthy), edges(matrix) {}
 
@@ -82,6 +82,7 @@ char Graph::getStatus(int nodeInd)
         return 'S';
     else if (this->vertex[nodeInd] == Carrier)
         return 'C';
+    return 's';
 }
 
 VertexStatus Graph::getNodeStatus(int nodeInd)
@@ -91,9 +92,9 @@ VertexStatus Graph::getNodeStatus(int nodeInd)
 
 bool Graph::hasEdge(int i, int j)
 {
-    return edges[i][j] == 1;
+    return this->getEdges()[i][j] == 1;
 }
-vector<vector<int>> Graph::getGraph()
+vector<vector<int>> Graph::getEdges()
 {
     return this->edges;
 }
@@ -108,8 +109,42 @@ void Graph::print()
     }
 }
 
-Tree &Graph::BFS(const Session &sess, int nodeInd)
+vector<int> &Graph::getNeighbors(int nodeInd)
 {
-    Tree *root = Tree::createTree(sess, nodeInd);
-    return *root;
+    vector<int> *neighbors = new vector<int>();
+    for (uint i = 0; i < edges.size(); i++)
+        if (hasEdge(i, nodeInd))
+            neighbors->push_back(i);
+
+    return *neighbors;
+}
+
+Tree *Graph::bfs(Session &session, int nodeInd)
+{
+    Tree *bfs_tree = Tree::createTree(session, nodeInd);
+    vector<bool> *visited = new vector<bool>(6, 0);
+    queue<Tree *> tree_q;
+    tree_q.push(bfs_tree);
+    while (!tree_q.empty())
+    {
+        Tree *curr_tree = tree_q.front();
+        tree_q.pop();
+        if (!(*visited)[curr_tree->getNode()])
+        {
+            vector<int> neighbors = this->getNeighbors(curr_tree->getNode());
+            for (uint i = 0; i < neighbors.size(); ++i)
+                if ((*visited)[(neighbors)[i]])
+                {
+                    Tree *temp_tree = Tree::createTree(session, neighbors[i]);
+                    curr_tree->addChild(*temp_tree);
+                    tree_q.push(curr_tree->getChildren()[curr_tree->getChildren().size() - 1]);
+                    (*visited)[(neighbors)[i]] = true;
+                    delete temp_tree;
+                    temp_tree = nullptr;
+                }
+            // (*visited)[curr_tree->getNode()] = 2;
+            delete &neighbors;
+        }
+    }
+    return bfs_tree;
 }

@@ -1,5 +1,6 @@
 #include "Agent.h"
 #include "Graph.h"
+#include "Tree.h"
 #include <iostream>
 ContactTracer::ContactTracer() : Agent() {}
 
@@ -9,13 +10,15 @@ void ContactTracer::act(Session &session)
     int nodeInd = session.dequeueInfected();
     if (nodeInd != -1)
     {
-        // root->BFS(session);
-        // session.getGraph().BFS();
-        // Tree *bfsTree = Graph::BFS(session, nodeInd);
-        // int node = bfsTree->traceTree();
-        // session.getGraph().isolateNode(node);
-        // delete bfsTree;
-        // bfsTree = nullptr;
+
+        Tree *bfsTree = session.getGraph().bfs(session, nodeInd);
+
+        int node = bfsTree->traceTree();
+
+        session.getGraph().isolateNode(node);
+
+        delete bfsTree;
+        bfsTree = nullptr;
     }
 }
 
