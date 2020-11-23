@@ -2,31 +2,13 @@
 #include <iostream>
 #include <vector>
 #include "Tree.h"
-Graph::Graph() {}
+#include "queue"
 
-Graph::Graph(std::vector<std::vector<int>> matrix) : vertex(matrix.size(), Healthy), edges(matrix) {}
+Graph::Graph() : vertex(), edges() {}
 
-// Graph &Graph::operator=(const Graph &other)
-// {
-//     std::cout << "MOVE ASSIGNMENT" << std::endl;
-//     // std::cout << &edges << std::endl;
-//     this->edges = other.edges;
-//     // std::cout << &edges << std::endl;
-
-//     //     // std::copy(other._data, other._data + _length, _data);
-//     // }
-//     return *this;
-// }
-// Graph &Graph::operator=(const Graph &&other)
-// {
-//     if (this != &other)
-//     {
-//         // delete[] &edges;      // Delete the string's original dindata.
-//         // this->data_ = other.data_; // Copy the other string's data into this string.
-//         // other.data_ = nullptr;     // Finally, reset the other string's data pointer.
-//     }
-//     return *this;
-// }
+Graph::Graph(std::vector<std::vector<int>> matrix) : vertex(matrix.size(), Healthy), edges(matrix)
+{
+}
 
 bool Graph::isInfected(int nodeInd)
 {
@@ -40,24 +22,12 @@ void Graph::infectNode(int nodeInd)
 
 void Graph::isolateNode(int nodeInd)
 {
-
-    for (uint i = 0; i < edges.size(); i++)
-    {
+    for (uint i = 0; i < this->edges.size(); i++)
         if (this->edges[nodeInd][i] == 1)
         {
-            edges[nodeInd][i] = 0;
-            edges[i][nodeInd] = 0;
+            this->edges[nodeInd][i] = 0;
+            this->edges[i][nodeInd] = 0;
         }
-    }
-
-    // vector<vector<int>>::iterator it;
-    // for (it = edges.begin(); it != edges.end(); it++)
-    //     cout << it << endl;
-    //     // if (edges[nodeInd][it] == 1)
-    //     // {
-    //     //     edges[nodeInd][it] = 0;
-    //     //     edges[it][nodeInd] = 0;
-    //     // }
 }
 
 void Graph::changeStatus(int nodeInd, VertexStatus vs)
@@ -67,21 +37,11 @@ void Graph::changeStatus(int nodeInd, VertexStatus vs)
 
 int Graph::nearestNeighbor(int nodeInd)
 {
-    for (uint i = 0; i < edges.size(); i++)
-        if (edges[nodeInd][i] == 1)
+    for (uint i = 0; i < this->edges.size(); i++)
+        if (this->edges[nodeInd][i] == 1 && this->getNodeStatus(i) == Healthy)
             return i;
 
     return -1;
-}
-
-char Graph::getStatus(int nodeInd)
-{
-    if (this->vertex[nodeInd] == Healthy)
-        return 'H';
-    else if (this->vertex[nodeInd] == Sick)
-        return 'S';
-    else if (this->vertex[nodeInd] == Carrier)
-        return 'C';
 }
 
 VertexStatus Graph::getNodeStatus(int nodeInd)
@@ -91,25 +51,79 @@ VertexStatus Graph::getNodeStatus(int nodeInd)
 
 bool Graph::hasEdge(int i, int j)
 {
-    return edges[i][j] == 1;
+    return this->getEdges()[i][j] == 1;
 }
-vector<vector<int>> Graph::getGraph()
+vector<vector<int>> &Graph::getEdges()
 {
     return this->edges;
 }
+
+vector<int> *Graph::getNeighbors(int nodeInd)
+{
+    vector<int> *neighbors = new vector<int>();
+    for (uint i = 0; i < edges.size(); i++)
+        if (hasEdge(i, nodeInd))
+            neighbors->push_back(i);
+
+    return neighbors;
+}
+
+vector<VertexStatus> Graph::getVertexes()
+{
+    return this->vertex;
+}
+
+Tree &Graph::bfs(Session &session, int nodeInd)
+{
+    vector<bool> v(this->vertex.size(), false);
+    queue<Tree *> q;
+    Tree *root = Tree::createTree(session, nodeInd);
+    q.push(root);
+    while (!q.empty())
+    {
+        Tree *parent = q.front();
+        q.pop();
+        vector<int> *neighbors = this->getNeighbors(parent->getNode());
+        for (const auto neighbor : *neighbors)
+            if (!v[neighbor])
+            {
+                Tree *t = Tree::createTree(session, neighbor);
+                parent->addChild(t);
+                int nextChildIndex = parent->getChildren().size() - 1;
+                Tree *nextChild = parent->getChildren()[nextChildIndex];
+                q.push(nextChild);
+                v[neighbor] = true;
+                delete t;
+            }
+
+        delete neighbors;
+    }
+    return *root;
+}
+
+//!!
 void Graph::print()
 {
     for (uint i = 0; i < edges.size(); i++)
     {
-        cout << i << "." << this->getStatus(i) << " - ";
+        std::string s = this->getStatus(i);
+        cout << i << "-> " << s << " -> ";
         for (uint j = 0; j < edges[i].size(); j++)
+        {
             std::cout << edges[i][j] << " ";
+        }
         std::cout << "" << std::endl;
     }
 }
 
-Tree &Graph::BFS(const Session &sess, int nodeInd)
+//!!
+std::string Graph::getStatus(int nodeInd)
 {
-    Tree *root = Tree::createTree(sess, nodeInd);
-    return *root;
+    if (this->vertex[nodeInd] == Healthy)
+        return "\033[32mH\033[0m";
+    else if (this->vertex[nodeInd] == Sick)
+        return "\033[31mS\033[0m";
+    else if (this->vertex[nodeInd] == Carrier)
+        return "\033[33mC\033[0m";
+    return "N";
 }

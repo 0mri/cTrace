@@ -4,48 +4,49 @@
 #include <vector>
 #include "Graph.h"
 #include <string>
-#include <stack>  
+#include <queue>
 class Agent;
 
-enum TreeType{
+enum TreeType
+{
   Cycle,
   MaxRank,
   Root
 };
 
-class Session{
+class Session
+{
 public:
-    Session(const std::string& path);
-   
-    Session(const Session &other);
-    Session& operator=(const Session &other);
-    Session& operator=(Session&& other);
-    Session(Session&& other);
-    virtual ~Session();
+  Session(const std::string &path);
+  Session();
 
+  Session(const Session &other);
+  Session &operator=(const Session &other);
+  Session &operator=(Session &&other);
+  Session(Session &&other);
+  virtual ~Session();
 
+  void simulate();
+  void addAgent(const Agent &agent);
+  void setGraph(const Graph &graph);
 
-    void simulate();
-    void addAgent(const Agent& agent);
-    void setGraph(const Graph& graph);
-    
-    void enqueueInfected(int);
-    int dequeueInfected();
-    
-    TreeType getTreeType() const;
-    
-    Graph& getGraph();
+  void enqueueInfected(int);
+  int dequeueInfected();
 
-    int getCurrCycle();
-    bool isDone();
-    void JSON_Output();
+  TreeType getTreeType() const;
+
+  Graph &getGraph();
+  int getCurrCycle() const;
+
+  bool isDone();
+  void json_output();
 
 private:
-    std::stack <int> infected_queue;
-    std::vector<Agent*> agents;
-    Graph g;
-    TreeType treeType;
-    int currCycle;
+  Graph g;
+  TreeType treeType;
+  std::vector<Agent *> agents;
+  std::queue<int> infected_queue;
+  int currCycle;
 };
 
 #endif

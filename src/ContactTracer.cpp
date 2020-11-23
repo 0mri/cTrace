@@ -1,21 +1,19 @@
 #include "Agent.h"
 #include "Graph.h"
-#include <iostream>
+#include "Tree.h"
 ContactTracer::ContactTracer() : Agent() {}
 
 void ContactTracer::act(Session &session)
 {
-    cout << "ContactTracer act" << endl;
     int nodeInd = session.dequeueInfected();
     if (nodeInd != -1)
     {
-        // root->BFS(session);
-        // session.getGraph().BFS();
-        // Tree *bfsTree = Graph::BFS(session, nodeInd);
-        // int node = bfsTree->traceTree();
-        // session.getGraph().isolateNode(node);
-        // delete bfsTree;
-        // bfsTree = nullptr;
+        Tree &bfs = session.getGraph().bfs(session, nodeInd);
+        int node = bfs.traceTree();
+
+        session.getGraph().isolateNode(node);
+
+        delete &bfs;
     }
 }
 

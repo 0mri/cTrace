@@ -1,16 +1,19 @@
 # All Targets
-build: bin/cTrace
+build: cTrace
 
-bin/cTrace: bin/main.o
+cTrace: bin/main.o
 	@echo 'Invoking: C++ Linker'
 	g++ -o bin/cTrace bin/*.o
 	@echo 'Done.'
 
 
-
+t: clean bin/Session.o bin/Graph.o bin/CycleTree.o bin/MaxRankTree.o bin/RootTree.o bin/Tree.o bin/Virus.o bin/ContactTracer.o bin/Agent.o
+	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/treeMainStudents.o src/treeMainStudents.cpp
+	g++ -o bin/cTrace bin/*.o
+	bin/cTrace config1.json
 
 # Depends on the source and header files
-bin/main.o: bin/Session.o bin/Graph.o bin/CycleTree.o bin/MaxRankTree.o bin/RootTree.o bin/Tree.o s bin/Virus.o bin/ContactTracer.o bin/Agent.o
+bin/main.o: bin/Session.o bin/Graph.o bin/CycleTree.o bin/MaxRankTree.o bin/RootTree.o bin/Tree.o bin/Virus.o bin/ContactTracer.o bin/Agent.o
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/main.o src/main.cpp
 
 bin/Session.o: 
@@ -31,7 +34,6 @@ bin/RootTree.o:
 bin/Tree.o: 
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Tree.o src/Tree.cpp
 
-
 bin/Virus.o: 
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Virus.o src/Virus.cpp
 
@@ -40,6 +42,10 @@ bin/ContactTracer.o:
 
 bin/Agent.o: 
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Agent.o src/Agent.cpp
+
+
+
+	
 
 #Clean the build directory
 clean: 
