@@ -3,6 +3,7 @@
 #include <vector>
 #include "Tree.h"
 #include <queue>
+#include <string>
 enum VertexStatus
 {
   Healthy,
@@ -23,7 +24,7 @@ public:
 
   int nearestNeighbor(int nodeInd);
 
-  vector<int> &getNeighbors(int nodeInd);
+  vector<int> *getNeighbors(int nodeInd);
 
   void changeStatus(int nodeInd, VertexStatus vs);
 
@@ -31,13 +32,16 @@ public:
 
   VertexStatus getNodeStatus(int nodeInd);
 
-  char getStatus(int nodeInd);
-
   vector<vector<int>> &getEdges();
 
-  void print();
+  vector<VertexStatus> getVertexes();
 
-  Tree *bfs(Session &sess, int nodeInd);
+  //??
+  Tree &bfs(Session &session, int nodeInd);
+
+  //!!
+  std::string getStatus(int nodeInd);
+  void print();
 
 private:
   std::vector<VertexStatus> vertex;

@@ -21,16 +21,25 @@ public:
     int getNode();
 
     void addChild(const Tree &child);
-    void clear();
+    void addChild(Tree *child);
+
+    
     virtual Tree *clone() const = 0;
 
     static Tree *createTree(const Session &session, int rootLabel);
 
     virtual int traceTree() = 0;
 
+    void cloneChilds(const vector<Tree *> &childs);
+    void sortChilds();
+
+    // TEST
+    void print_childs();
+
 private:
     int node;
     std::vector<Tree *> children;
+    void Clear();
 };
 
 class CycleTree : public Tree

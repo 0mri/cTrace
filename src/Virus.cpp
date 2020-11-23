@@ -1,9 +1,6 @@
 #include "Agent.h"
 #include "Session.h"
 #include <iostream>
-//Constructor
-//Copy Constructor
-//distructor
 
 Virus::Virus(int index) : Agent(), nodeInd(index) {}
 
@@ -20,12 +17,12 @@ void Virus::act(Session &session)
     int nr_nbr = g1.nearestNeighbor(nodeInd);
     if (nr_nbr != -1) //if there is neighbors
     {
-        Agent *v1 = new Virus(nr_nbr);
+        Agent *new_virus = new Virus(nr_nbr);
+        session.addAgent(*new_virus);
         g1.changeStatus(nr_nbr, Carrier);
-        session.addAgent(*v1);
 
-        delete v1;
-        v1 = nullptr;
+        delete new_virus;
+        new_virus = nullptr;
     }
 }
 

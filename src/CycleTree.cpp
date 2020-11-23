@@ -5,18 +5,14 @@ CycleTree::CycleTree(int rootLabel, int currCycle) : Tree(rootLabel), currCycle(
 
 int CycleTree::traceTree()
 {
-    bool stop = false;
-    Tree *LeftMost = this;
-
-    for (uint i = 0; i < (uint)this->currCycle && !stop; ++i)
-    {
-        if (LeftMost->getChildren().size() != 0)
-            LeftMost = (LeftMost->getChildren()[0]);
+    Tree *left_most = this;
+    for (uint i = 0; i < (uint)this->currCycle; i++)
+        if (left_most->getChildren().size() != 0)
+            left_most = (left_most->getChildren()[0]);
         else
-            stop = true;
-    }
-    return LeftMost->getNode();
-    ;
+            break;
+
+    return left_most->getNode();
 }
 
 CycleTree *CycleTree::clone() const

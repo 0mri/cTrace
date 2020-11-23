@@ -36,16 +36,16 @@ public:
   TreeType getTreeType() const;
 
   Graph &getGraph();
-  int getCurrCycle();
+  int getCurrCycle() const;
 
   bool isDone();
   void json_output();
 
 private:
-  std::queue<int> infected_queue;
-  std::vector<Agent *> agents;
   Graph g;
   TreeType treeType;
+  std::vector<Agent *> agents;
+  std::queue<int> infected_queue;
   int currCycle;
 };
 

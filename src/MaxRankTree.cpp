@@ -1,27 +1,29 @@
 #include "Tree.h"
 #include <queue>
-
+#include <iostream>
 MaxRankTree::MaxRankTree(int rootLabel) : Tree(rootLabel) {}
 
 int MaxRankTree::traceTree()
 {
-    queue<Tree *> tree_q;
-    tree_q.push(this);
-    int max_nodeInd = tree_q.front()->getNode();
-    int num_of_childs = tree_q.front()->getChildren().size();
-    int curr_childs, curr_index;
-    while (!tree_q.empty())
+    queue<Tree *> q;
+    q.push(this);
+    int max_nodeInd = q.front()->getNode();
+    int num_of_childs = q.front()->getChildren().size();
+    int curr_childs;
+    int curr_index;
+    while (!q.empty())
     {
-        Tree *curr_sub_tree = tree_q.front();
-        tree_q.pop();
+        Tree *curr_sub_tree = q.front();
+        std::cout << "MaxRank: " << curr_sub_tree->getNode() << " Childs: " << curr_sub_tree->getChildren().size() << std::endl;
+        q.pop();
         curr_childs = curr_sub_tree->getChildren().size();
         curr_index = curr_sub_tree->getNode();
 
-        max_nodeInd = (curr_childs > num_of_childs) ? curr_index : max_nodeInd;
-        num_of_childs = (curr_childs > num_of_childs) ? curr_childs : num_of_childs;
+        max_nodeInd = curr_childs > num_of_childs ? curr_index : max_nodeInd;      //save the node index with the greatest num of childs
+        num_of_childs = curr_childs > num_of_childs ? curr_childs : num_of_childs; //save num of childs of the urrent node
 
-        for (int i = 0; i < curr_childs; i++)
-            tree_q.push(curr_sub_tree->getChildren()[i]);
+        for(const auto &child: curr_sub_tree->getChildren())
+            q.push(child);
     }
     return max_nodeInd;
 }

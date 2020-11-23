@@ -1,6 +1,7 @@
 #include "Tree.h"
 #include "Session.h"
-
+#include <iostream>
+#include <algorithm>
 std::vector<Tree *> Tree::getChildren()
 {
     return this->children;
@@ -11,30 +12,48 @@ int Tree::getNode()
     return this->node;
 }
 
-void Tree::addChild(const Tree &child) //NOT SURE
+void Tree::addChild(const Tree &child)
 {
-    children.push_back(child.clone());
-    int child_index = child.node;
-    int i = children.size() - 2;
-    while (children[i]->getNode() > child_index && i >= 0)
+
+    this->children.push_back(child.clone());
+    if (this->children.size() >= 2)
     {
-        Tree *temp = children[i];
-        children[i] = children[i + 1];
-        children[i + 1] = temp;
-        i--;
+        int i = children.size() - 2;
+        while (i >= 0 && (children[i]->getNode()) > (children[i + 1]->getNode()))
+        {
+            Tree *c = children[i];
+            children[i] = children[i + 1];
+            children[i + 1] = c;
+            i--;
+        }
+    }
+}
+
+void Tree::addChild(Tree *child)
+{
+    this->children.push_back(child->clone());
+    if (this->children.size() >= 2)
+    {
+        int i = children.size() - 2;
+        while (i >= 0 && (children[i]->getNode()) > (children[i + 1]->getNode()))
+        {
+            Tree *c = children[i];
+            children[i] = children[i + 1];
+            children[i + 1] = c;
+            i--;
+        }
     }
 }
 
 Tree *Tree::createTree(const Session &session, int rootLabel)
 {
-    TreeType currTreeType = session.getTreeType();
-
+    TreeType curr_tree_type = session.getTreeType();
     Tree *t;
-    if (currTreeType == MaxRank)
+    if (curr_tree_type == MaxRank)
         t = new MaxRankTree(rootLabel);
-    else if (currTreeType == Cycle)
-        t = new CycleTree(rootLabel, 9);
-    else if (currTreeType == Root)
+    else if (curr_tree_type == Cycle)
+        t = new CycleTree(rootLabel, session.getCurrCycle());
+    else
         t = new RootTree(rootLabel);
 
     return t;
@@ -42,17 +61,15 @@ Tree *Tree::createTree(const Session &session, int rootLabel)
 
 Tree::~Tree()
 {
-    clear();
+    Clear();
 }
 
 Tree::Tree(int rootLabel) : node(rootLabel), children() {}
 
 //Copy Constructor
-Tree::Tree(const Tree &t) : node(t.node), children()
+Tree::Tree(const Tree &other) : node(other.node), children()
 {
-    vector<Tree *>::iterator iter;
-    for (iter = children.begin(); iter < children.end(); iter++)
-        children.push_back((*iter)->clone());
+    cloneChilds(other.children);
 }
 
 //Move Constractor
@@ -71,7 +88,7 @@ Tree &Tree::operator=(Tree &&other)
     if (this != &other)
     {
         this->node = other.node;
-        clear();
+        Clear();
         for (uint i = 0; i < other.children.size(); ++i)
         {
             this->children[i] = other.children[i];
@@ -87,13 +104,13 @@ Tree &Tree::operator=(const Tree &other)
     if (this != &other)
     {
         this->node = other.node;
-        for (uint i = 0; i < other.children.size(); i++)
-            this->children.push_back(other.children[i]->clone());
+        for (const auto &child : children)
+            this->children.push_back(child->clone());
     }
     return *this;
 }
 
-void Tree::clear()
+void Tree::Clear()
 {
     while (!children.empty())
     {
@@ -101,4 +118,20 @@ void Tree::clear()
         children[0] = nullptr;
         children.erase(children.cbegin());
     }
+}
+
+void Tree::cloneChilds(const vector<Tree *> &children)
+{
+    for (const auto &child : children)
+        this->children.push_back(child->clone());
+}
+
+
+//!!
+void Tree::print_childs()
+{
+    for (const auto *child : this->children)
+        cout << child->node << ", ";
+
+    cout << endl;
 }
